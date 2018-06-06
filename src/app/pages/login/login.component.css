@@ -1,0 +1,34 @@
+.login-content{
+  background-image: url('/assets/login.jpg');
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.login-txt{
+  width: 420px;
+  height: 300px;
+  padding: 0 20px;
+  border: 1px solid #ffffff ;
+  border-radius: 5px;
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#f6f6f6), to(#f4f4f4));
+  position: absolute;
+  left: 33%;
+  top: 30%;
+}
+.login-txt .text-center{
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.login-form {
+  max-width: 300px;
+  margin-left: 40px;
+}
+
+.login-form-forgot {
+  float: right;
+}
+
+.login-form-button {
+  width: 100%;
+}

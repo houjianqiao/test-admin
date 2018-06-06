@@ -1,0 +1,56 @@
+<div class="detail-content">
+  <nz-layout>
+    <nz-breadcrumb style="margin:12px 0;">
+      <nz-breadcrumb-item>引擎检测</nz-breadcrumb-item>
+      <nz-breadcrumb-item>检测管理</nz-breadcrumb-item>
+      <nz-breadcrumb-item>检测详情</nz-breadcrumb-item>
+    </nz-breadcrumb>
+    <nz-content style="background:#fff; padding: 24px; min-height: 280px;">
+      <nz-tabset>
+        <nz-tab>
+          <ng-template #nzTabHeading>
+            疑似数据
+          </ng-template>
+          <div style="border-bottom: 1px solid rgb(233, 233, 233);">
+            <label nz-checkbox [(ngModel)]="allChecked" (ngModelChange)="updateAllChecked()" [nzIndeterminate]="indeterminate">
+              <span>综合分析</span>
+            </label>
+            <nz-checkbox-group [(ngModel)]="checkOptionsOne" (ngModelChange)="updateSingleChecked()"></nz-checkbox-group>
+            <button nz-button [nzType]="'default'" [nzSize]="'small'" (click)="reloadData()">
+              <i class="anticon anticon-reload"></i><span>刷新</span>
+            </button>
+          </div>
+
+          <app-photo-show [data]="data" [pageTotal]="pageTotal" [dataResult]="dataResult" (pidEmitter)="pidEmitter($event)" (indexEmitter)="indexEmitter($event)"></app-photo-show>
+        </nz-tab>
+        <nz-tab>
+          <ng-template #nzTabHeading>
+            统计
+          </ng-template>
+          tongji
+        </nz-tab>
+        <nz-tab>
+          <ng-template #nzTabHeading >
+            <div (click)="getLog()">运行日志</div>
+          </ng-template>
+          <div style="margin-bottom: 10px;">
+            <button nz-button [nzType]="'default'"
+                    (click)="sendMessage('tail -f //root//apache-tomcat-8.5.16//logs//catalina.out')">
+              更换日志
+            </button>
+            <button nz-button [nzType]="'default'"
+                    (click)="clearMessage()">
+              清空日志
+            </button>
+          </div>
+          <div #scroll id="log-container" style="height: 450px; overflow-y: scroll;  background: #333; color: #aaa; padding: 10px;">
+            <div [innerHTML]="logData">
+            </div>
+          </div>
+        </nz-tab>
+
+
+      </nz-tabset>
+    </nz-content>
+  </nz-layout>
+</div>

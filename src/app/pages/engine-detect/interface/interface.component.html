@@ -1,0 +1,37 @@
+<nz-layout>
+  <nz-breadcrumb style="margin:12px 0;">
+    <nz-breadcrumb-item>引擎检测</nz-breadcrumb-item>
+    <nz-breadcrumb-item>检测管理</nz-breadcrumb-item>
+    <nz-breadcrumb-item>接口管理</nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <nz-content style="background:#fff; padding: 24px; min-height: 280px;">
+    <h6>服务ip:</h6><br>
+    <nz-input style="max-width: 35%" [(ngModel)]="service_ip" [nzPlaceHolder]="'请输入服务ip...'" (ngModelChange)="_console($event)"></nz-input>
+    <br><br>
+    <h6>服务端口:</h6><br>
+    <nz-input style="max-width: 35%" [(ngModel)]="service_port" [nzPlaceHolder]="'请输入服务端口...'" (ngModelChange)="_console($event)"></nz-input>
+    <br><br><hr><br>
+    <h6>同步地址:</h6><br>
+    <nz-input style="max-width: 35%" [(ngModel)]="sync_address" [nzPlaceHolder]="'请输入同步地址...'" (ngModelChange)="_console($event)"></nz-input>
+    <br><br><h6>异步地址地址:</h6><br>
+    <nz-input style="max-width: 35%" [(ngModel)]="async_address" [nzPlaceHolder]="'请输入异步地址...'" (ngModelChange)="_console($event)"></nz-input>
+    <br><br><hr><br>
+    <h6>回掉地址:</h6><br>
+    <nz-input style="max-width: 35%" [(ngModel)]="callback_address" [nzPlaceHolder]="'请输入回掉地址...'" (ngModelChange)="_console($event)"></nz-input>
+    <br><br>
+    <h6 style="margin-top: 15px;">并发数量:</h6><br>
+    <nz-select [(ngModel)]="selected" style="width: 120px;">
+      <nz-option [nzLabel]="'2'" [nzValue]="'2'"></nz-option>
+      <nz-option [nzLabel]="'3'" [nzValue]="'3'"></nz-option>
+      <nz-option [nzLabel]="'4'" [nzValue]="'4'"></nz-option>
+      <nz-option [nzLabel]="'5'" [nzValue]="'5'"></nz-option>
+      <nz-option [nzLabel]="'6'" [nzValue]="'6'"></nz-option>
+      <nz-option [nzLabel]="'7'" [nzValue]="'7'"></nz-option>
+      <nz-option [nzLabel]="'8'" [nzValue]="'8'"></nz-option>
+    </nz-select>
+    <br><br><br>
+    <button nz-button [nzType]="'primary'" (click)="loadOne($event)">
+      <span>保存</span>
+    </button>
+  </nz-content>
+</nz-layout>

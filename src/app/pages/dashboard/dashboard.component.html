@@ -1,0 +1,84 @@
+<nz-layout style="min-height: 800px;">
+  <nz-sider nzCollapsible [nzTrigger]="null" style="min-height: 900px">
+    <ul nz-menu [nzMode]="'inline'" nzTheme='dark' style="height:100%">
+      <li nz-menu-item>
+          <span title>
+            <i class="anticon anticon-laptop"></i>引擎展示</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-content style="padding: 24px; min-height: 280px;">
+      <nz-layout>
+        <nz-breadcrumb style="margin:12px 0;">
+          <nz-breadcrumb-item>引擎展示</nz-breadcrumb-item>
+        </nz-breadcrumb>
+        <nz-content style="background:#fff; padding: 24px; min-height: 280px;">
+          <div nz-row>
+            <div nz-col [nzSpan]="12">
+              <div nz-row>
+                <div nz-col [nzSpan]="6">
+                  <nz-upload
+                    [nzMultiple]="true"
+                    [(nzFileList)]="fileList"
+                    [nzBeforeUpload]="beforeUpload"
+                    nzShowUploadList="false">
+                    <button nz-button>
+                      <i class="anticon anticon-upload"></i><span>选择上传图片</span>
+                    </button>
+                  </nz-upload>
+                </div>
+                <div nz-col [nzSpan]="18">
+                  <button nz-button [nzType]="'primary'" (click)="clearAll()">
+                    <span>清空图片</span>
+                  </button>
+                </div>
+              </div>
+              <br>
+              <div style="padding:24px;border: 1px solid #ececec;border-radius: 5px">
+                <nz-checkbox-group [(ngModel)]="checkOption" (ngModelChange)="updateSingleChecked()"></nz-checkbox-group>
+                <label nz-checkbox [(ngModel)]="allChecked" (ngModelChange)="updateAllChecked()" [nzIndeterminate]="indeterminate">
+                  <span>综合分析</span>
+                </label>
+                <br>
+                <button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUpload()"
+                        [disabled]="fileList.length == 0" style="margin-top: 16px">
+                  {{ uploading ? '正在检测中' : '检测' }}
+                </button>
+              </div>
+              <br>
+              <div *ngIf="haveImage">
+                <div nz-row>
+                  <div nz-col [nzSpan]="24" *ngFor="let image of imageInfos; index as i; trackBy: trackByIndex;" style="margin-bottom:10px ">
+                    <img [src]="image.imageurl" style="width: 150px;height: 150px;float: left;margin-right: 6px">
+                    <p style="font-size: 14px;font-weight: bold">{{image.res}}</p>
+                    <!--<div *ngIf="haveData">
+                      <div *ngIf="data[i].url!=''">
+
+                      </div>
+                      <img src="{{data[i].url}}" style="width: 150px;height: 150px;float: left;margin-right: 6px">
+                      <span>{{data[i].res}}</span>
+                    </div>-->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div nz-col [nzSpan]="11" [nzOffset]="1">
+              <div class="json-viewer-container">
+                <div class="json-viewer-header">
+                  <div>RESPONSE JSON</div>
+                </div>
+                <pre *ngIf="isNull" style="font-size: 14px;font-weight: bold"></pre>
+                <pre *ngIf="!isNull" style="font-size: 14px;font-weight: bold">{{jsonObject|json}}</pre>
+              </div>
+            </div>
+          </div>
+        </nz-content>
+      </nz-layout>
+
+    </nz-content>
+  </nz-layout>
+</nz-layout>
+
+
+

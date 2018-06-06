@@ -1,0 +1,14 @@
+<div class="photo_container">
+  <div *ngFor="let photo of faceDetail" class="item">
+    <img src="{{photo.fileurl}}" style="width:100px;height: 120px">
+    <!--<div class="text">
+      <span>样本名称:{{photo.name}}</span><br>
+      <span>样本MD5:{{photo.md5}}</span><br>
+      <span>更新时间:{{photo.updatetime}}</span><br>
+    </div>-->
+  </div>
+</div>
+<div class="text-pagination">
+  <nz-pagination [(nzPageIndex)]="faceDetailIndex" (nzPageIndexChange)="jumpPage()" [nzTotal]="faceDetailTotal" nzShowQuickJumper [(nzPageSize)]="pageSize" ></nz-pagination>
+</div>
+

@@ -1,0 +1,32 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<nz-layout class="layout">
+  <nz-header>
+    <div class="logo">
+      <i class="anticon anticon-windows" style="font-size: 30px;color:aliceblue;"></i>
+      <span class="logo-text">
+        图片音视频专用机
+      </span>
+
+    </div>
+    <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;">
+      <li nz-menu-item>
+        <a routerLink="/pages/dashboard">引擎展示</a>
+      </li>
+      <li nz-menu-item>
+        <a routerLink="/pages/engine-detect">引擎检测</a>
+      </li>
+      <li nz-menu-item>
+        <a routerLink="/pages/tongji-detect">统计监测</a>
+      </li>
+      <li nz-menu-item>
+        <a routerLink="/pages/settings">系统管理</a>
+      </li>
+    </ul>
+  </nz-header>
+  <nz-content style="background:#fff; padding-bottom: 24px; min-height: 800px;">
+    <router-outlet></router-outlet>
+  </nz-content>
+  <nz-footer style="text-align: center;">Ant Design ©2017 Implement By Angular</nz-footer>
+</nz-layout>
+
+

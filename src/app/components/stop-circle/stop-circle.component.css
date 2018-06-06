@@ -1,0 +1,58 @@
+/*旋转动画*/
+@keyframes moveover {
+  0%   {transform:rotate(0deg);}
+  100% {transform:rotate(360deg);}
+}
+.circle{
+  align-content: center;
+
+}
+.circle .p-cir .text{
+  font-size: 18px;
+  position: absolute;
+  float: left;
+  top: 34%;
+  left: 0.6rem;
+  z-index: 4;
+}
+.circle .p-cir{
+  position: relative;
+  left: 40%;
+}
+.box{
+  position:relative;
+  width:90px;
+  height:90px;
+  /*整体旋转*/
+  animation:moveover 3s linear infinite;
+}
+.box1{
+  position:absolute;
+  width: 45px;
+  height: 90px;
+  border-radius:50px 0 0 50px;
+  /* 起始最深颜色为 #999，过渡到中间颜色为 #d0cfcf */
+  background: linear-gradient(#FF5500, #F5E3D8);
+  background-color: red;
+  z-index:2;
+}
+.box2{
+  position:absolute;
+  width: 45px;
+  height: 90px;
+  border-radius:0 50px 50px 0;
+  left:50%;
+  /* 过渡到中间颜色为 #d0cfcf 最终末尾颜色为 #eee */
+  background: linear-gradient(#F5E3D8,#FF5500);
+  z-index:1;
+}
+.box3{
+  position:absolute;
+  width:80px;
+  height:80px;
+  top:5px;
+  left:5px;
+  border-radius:50%;
+  background-color: #fff;
+  z-index:2;
+}

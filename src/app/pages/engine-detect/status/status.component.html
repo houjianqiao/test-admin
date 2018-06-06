@@ -1,0 +1,54 @@
+<!--<div echarts [options] = "Baroptions" [loading]="showloading" class="demo-chart"></div>-->
+<nz-breadcrumb style="margin:12px 0;">
+  <nz-breadcrumb-item>引擎检测</nz-breadcrumb-item>
+  <nz-breadcrumb-item>检测管理</nz-breadcrumb-item>
+  <nz-breadcrumb-item>运行状态</nz-breadcrumb-item>
+</nz-breadcrumb>
+<div style="background:#fff; padding: 24px; min-height: 800px; width: 100%">
+  <div class="line1">
+      <div class="line1-left">
+        <p>状态</p>
+        <div class="status-show">
+          <div *ngIf="status==='2'"><app-circle></app-circle></div>
+          <div *ngIf="status==='0'||status==='1'">
+            <nz-progress [ngModel]="100" [nzType]="'circle'" [nzWidth]="100" [nzFormat]="_formatTwo"></nz-progress>
+          </div>
+          <div *ngIf="status==='3'"><app-stop-circle></app-stop-circle></div>
+
+        </div>
+        <div class="select-button">
+          <button nz-button [nzType]="'primary'" (click)="startEngine($event)" [disabled]="status!='1'? true:false">
+            <i class="anticon anticon-poweroff"></i>
+            <span>启动</span>
+          </button>
+          <button nz-button [nzType]="'primary'" (click)="endEngine($event)" [disabled]="status!='0'? true:false">
+            <i class="anticon anticon-pause"></i>
+            <span>停止</span>
+          </button>
+        </div>
+      </div>
+    <div class="line1-right">
+      <nz-table #nzTable [nzDataSource]="data" [nzBordered]="'false'" [nzIsPagination]="false" [nzSize]="'small'">
+        <thead nz-thead>
+        <tr>
+          <th nz-th><span style="font-weight: bold;font-size: 15px">配置</span></th>
+          <th nz-th><span style="font-weight: bold;font-size: 15px">状态</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let data of data">
+          <td nz-td style="font-weight: bold">
+            <a>{{data.config}}</a>
+          </td>
+          <td nz-td>{{data.value}}</td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+    <div class="content-bottom">
+      <div echarts [options]="option" class="demo-chart"></div>
+    </div>
+
+
+</div>

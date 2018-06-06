@@ -1,0 +1,29 @@
+.dynamicKeywordComponent_container {
+  .keyword_container {
+      display: flex;
+      display: -webkit-flex;
+      .item {
+          position: relative;
+          width: 100%;
+          margin-right: 3px;
+          &:hover {
+              .btn_close {
+                  display: block;
+              }
+          }
+          .btn_close { // 关闭按钮
+            display: none;
+          }
+      }
+  }
+  .ant-select-dropdown-menu {
+      padding-left: 0;
+      background: red;
+  }
+  .dynamicKeyword-footer_container {
+      display: flex;
+      display: -webkit-flex;
+      -webkit-justify-content: space-between; /* Safari */ 
+      justify-content: space-between;
+  }
+}

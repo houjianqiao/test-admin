@@ -1,0 +1,83 @@
+<div class="photo_container">
+  <div *ngFor="let photo of data" class="item">
+    <img src="{{photo.fileurl}}" (click)="showModal(photo)" style="width:160px;height: 180px">
+
+    <div class="text">
+      <div class="nextline"><span>名称: {{photo.name}}</span> </div>
+      <span>样本MD5: {{photo.md5}}</span><br>
+      <span>更新时间: {{photo.updatetime}}</span><br>
+    </div>
+  </div>
+  <nz-modal [nzVisible]="isVisible" [nzTitle]="'详情展示'" [nzFooter]="uploadModalFooter" [nzContent]="modalContent" (nzOnCancel)="handleCancel($event)" >
+    <ng-template #modalContent>
+      <div class="line1" nz-row >
+        <div class="line1-left" nz-col [nzSpan]="8" >
+          <img src="{{modalPhoto.fileurl}}" style="width:130px;height: 150px">
+        </div>
+        <div class="line1-right" nz-col [nzSpan]="12" [nzOffset]="4">
+          <span style="font-weight: bold">图片信息:</span><br>
+          <div class="photoUrl">{{modalPhoto.name}}</div>
+          <span>MD5: {{modalPhoto.md5}}</span><br>
+          <span style="width: 200px;font-size: 14px">更新时间: {{modalPhoto.updatetime}}</span>
+          <div class="photoUrl">图片地址: {{modalPhoto.fileurl}}</div><br>
+        </div>
+      </div>
+      <hr><br>
+      <div *ngIf="modalPhoto.spid==='harm'" style="margin-bottom: 10px">
+        <p>图片分类结果</p>
+        <span style="font-size: 14px">有害概率：{{modalPhoto.comscore}}</span>
+      </div>
+      <div *ngIf="modalPhoto.spid!='harm'">
+        <p>图片比对结果</p><span>{{dataResult.sample==='0' ? '无' : '' }}</span>
+        <div class="line2" nz-row *ngIf="dataResult.sample==='1'">
+          <div class="line2-left" nz-col [nzSpan]="8" >
+            <div class="mingzhong"><span>命中</span></div>
+            <div>
+              <img src="{{dataResult.sampleurl}}" style="width: 130px;height: 150px">
+            </div>
+          </div>
+          <div class="line2-right" nz-col [nzSpan]="8" [nzOffset]="4">
+            <span style="font-weight: bold">检测结果:</span><br>
+            <span>具体相似度: {{dataResult.comscore}}</span><br>
+            <span>相似样本id: {{dataResult.spid}}</span><br>
+            <span>相似类型:</span><br>
+            <span>一级类型: {{dataResult.sampletypeid1}}</span><br>
+            <span>二级类型: {{dataResult.sampletypeid2}}</span><br>
+          </div>
+        </div>
+      </div>
+      <hr><br>
+
+      <p>图片OCR结果</p> <span>{{dataResult.ocrshow==='0' ? '无' : '' }}</span>
+      <div class="line3">
+        <div *ngIf="dataResult.ocrshow==='1'">
+          <div style="border: 1px solid gainsboro; padding: 5px">{{dataResult.ocr}}</div>
+        </div>
+      </div>
+      <hr><br>
+      <p>人脸比对结果</p> &nbsp;&nbsp;<span>{{dataResult.face==='0' ? '无' : '' }}</span>
+      <div class="line4" nz-row *ngIf="dataResult.face==='1'" >
+        <div class="line4-left" nz-col [nzSpan]="8" >
+          <img src="{{dataResult.faceurl}}" style="width: 130px;height: 150px">
+        </div>
+        <div class="line4-right" nz-col [nzSpan]="8" [nzOffset]="4">
+          <span style="font-weight: bold">检测结果列表:</span><br>
+          <span>人脸相似度: {{dataResult.facescore}}</span><br>
+          <span>人脸名: {{dataResult.facename}}</span><br>
+          <span>人脸类型: </span><br>
+          <span>一级类型: {{dataResult.facetypeid1}}</span><br>
+          <span>二级类型: {{dataResult.facetypeid2}}</span><br>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #uploadModalFooter>
+      <button nz-button [nzType]="'primary'" style="height: 38px" (click)="handleOk($event)">
+        关闭
+      </button>
+    </ng-template>
+  </nz-modal>
+</div>
+<div class="text-pagination">
+  <nz-pagination [(nzPageIndex)]="pageIndex" (nzPageIndexChange)="jumpPage()" [nzTotal]="pageTotal" nzShowQuickJumper [(nzPageSize)]="pageSize" ></nz-pagination>
+</div>
+

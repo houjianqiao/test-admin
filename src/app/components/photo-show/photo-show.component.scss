@@ -1,0 +1,87 @@
+.photo_container {
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  .item {
+    padding: 5px;
+    text-align: center;
+    width: 160px;
+    min-width: 170px;
+    height: 280px;
+    margin:15px 20px;
+    border: 1px solid gainsboro;
+    .text{
+      text-align: left;
+      span{
+      }
+      .nextline{
+        margin-bottom:0px;
+        font-size: 14px;
+        width: 160px;
+        white-space:normal;
+        word-break:break-all;
+        word-wrap:break-word;
+      }
+    }
+
+  }
+}
+.text-pagination {
+  margin: 5px 0;
+  float: right;
+}
+p{
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+.line1{
+    margin-bottom: 20px;
+  span{
+    margin-bottom:10px;
+    font-size: 14px;
+  }
+  .line1-right{
+    .photoUrl{
+      margin-bottom:0px;
+      font-size: 14px;
+      width: 200px;
+      white-space:normal;
+      word-break:break-all;
+      word-wrap:break-word;
+    }
+  }
+}
+.line2{
+  margin-bottom: 20px;
+  span{
+    margin-bottom:10px;
+    font-size: 14px;
+  }
+  .mingzhong{
+    position: absolute;
+    float: left;
+    top: 34%;
+    left: 21%;
+    z-index: 4;
+    span{
+      font-size: 30px;
+      color: red;
+    }
+  }
+
+}
+.line3{
+  margin-bottom: 20px;
+  span{
+    font-size: 14px;
+  }
+}
+.line4{
+  margin-bottom: 20px;
+  span{
+    margin-top:10px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,317 @@
+<nz-layout xmlns="http://www.w3.org/1999/html">
+  <nz-breadcrumb style="margin:12px 0;">
+    <nz-breadcrumb-item>引擎检测</nz-breadcrumb-item>
+    <nz-breadcrumb-item>特征管理</nz-breadcrumb-item>
+    <nz-breadcrumb-item>图片样本</nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <nz-content style="background:#fff; padding: 24px; min-height: 280px;padding-left: 10px">
+    <div nz-row>
+      <div nz-col [nzSpan]="4">
+        <!--类别树-->
+        <app-face-tree [nodes]="nodes" (typeSearchEmit)="typeSearchEmit($event)" (firstEventEmit)="firstEventEmit($event)"
+                       (newEventEmit)="newEventEmit($event)"></app-face-tree>
+      </div>
+      <div nz-col [nzSpan]="19" [nzOffset]="1">
+        <!--搜索框-->
+        <div nz-row>
+          <div nz-col [nzSpan]="8">
+            <div class="input-group">
+              <input id="typeahead-format" type="text" class="form-control"
+                     [(ngModel)]="keyword" [ngbTypeahead]="search" [resultFormatter]="formatter"
+                     (keydown.enter)="onSearch($event)"/>
+              <button nz-button [nzType]="'primary'" (click)="onSearch($event)" style="height: 38px">
+                搜索
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--上传文件按钮-->
+        <div class="right_side_action">
+          <button nz-button [nzType]="'primary'" style="height: 30px" (click)="showUploadModal()">添加人脸</button>
+        </div>
+        <!--全选+修改阈值-->
+        <div nz-row [nzAlign]="'middle'" style="margin-top: 20px;border-bottom: 1px solid gainsboro;padding-bottom: 10px">
+          <div nz-col [nzSpan]="2">
+            <label nz-checkbox [(ngModel)]="_allChecked" (ngModelChange)="updateAllChecked()"
+                   [nzIndeterminate]="indeterminate" style="zoom: 120%">
+              <span>全选</span>
+            </label>
+          </div>
+          <div nz-col [nzSpan]="4">
+            <button nz-button [nzType]="'primary'" [nzSize]="size" style="height: 30px;margin-left: 15%"
+                    (click)="showEditModal($event)" [disabled]="editshow">批量修改</button>
+          </div>
+          <div nz-col [nzSpan]="18">
+            <span>状态查询：</span>
+            <label nz-checkbox [(ngModel)]="allSelectChecked" (ngModelChange)="updateAllSelectChecked()" [nzIndeterminate]="indeterminateState">
+              <span>全选</span>
+            </label>
+            <nz-checkbox-group [(ngModel)]="checkOptionsOne" (ngModelChange)="updateSingleSelectChecked()"></nz-checkbox-group>
+
+            <button nz-button [nzType]="'primary'" [nzSize]="size" style="height: 30px;margin-left: 10px"
+                    (click)="changState()">查询</button>
+          </div>
+        </div>
+        <!--展示图片-->
+        <div class="photo_container">
+          <div *ngFor="let photo of photos" class="item">
+            <img src="{{photo.fileurl}}" style="width: 160px;height: 175px" (click)="showEditModal(photo)">
+            <!--<div style="width: 140px">-->
+            <div style="float: left">
+              <label nz-checkbox [(ngModel)]="photo.checked" (ngModelChange)="updateSingleChecked()"></label>
+            </div>
+            <div style="float: left;margin-left: 10px;font-size: 13px; text-align: left;max-width: 130px">
+              <span *ngIf="photo.name!=''">名称:{{photo.name}}</span><br *ngIf="photo.name!=''">
+              <span>阈值:{{photo.threshold}}</span><br>
+              <span>状态:{{photo.state===0 ? '未启用':(photo.state===1 ? '正常':(photo.state===2 ? '正在添加':(photo.state===3 ? '正在停止':'')))}}</span><br>
+              <span>修改时间: {{photo.updatetime}}</span>
+            </div>
+            <!--</div>-->
+          </div>
+        </div>
+        <div class="text-pagination">
+          <nz-pagination [(nzPageIndex)]="pageIndex" (nzPageIndexChange)="jumpPage()" [(nzTotal)]="pageTotal"
+                         [(nzPageSize)]="pageSize" nzShowQuickJumper></nz-pagination>
+        </div>
+      </div>
+    </div>
+  </nz-content>
+  <!--修改单张图片阈值弹框-->
+  <nz-modal [nzVisible]="isEditModalVisible" [nzFooter]="editModalFooter" [nzContent]="editModalContent"
+            [nzWidth]="550"
+            [nzClosable]="false"
+            (nzOnCancel)="editCancel($event)" (nzOnOk)="editOk($event,'1')">
+    <ng-template #editModalContent>
+      <div nz-row>
+        <div nz-col [nzSpan]="24">
+          <!--图片展示-->
+          <div nz-row>
+            <div nz-col [nzSpan]="10">
+              <img src="{{photoInfo['fileurl']}}" style="width: 160px;height: 180px">
+            </div>
+            <div nz-col [nzSpan]="14">
+              <h5>样本信息列表</h5>
+              <br>
+              <ul style="list-style-type:square">
+                <span style="font-size: 14px; margin-bottom: 5px">名称: {{photoInfo["name"]}}</span><br>
+                <span style="font-size: 14px; margin-bottom: 5px">更新人: {{photoInfo["updateuser"]}}</span><br>
+                <span style="font-size: 14px; margin-bottom: 5px">更新时间: {{photoInfo["updatetime"]}}</span><br>
+                <span style="font-size: 14px; margin-bottom: 5px">MD5: {{photoInfo["md5"]}}</span><br>
+                <div class="photoUrl">路径: {{photoInfo["fileurl"]}}</div>
+                <br>
+              </ul>
+            </div>
+          </div>
+          <div *ngIf="faceDetail.length!=0">
+            <app-face-photo [faceDetail]="faceDetail" [faceDetailTotal]="faceDetailTotal" [faceDetailIndex]="faceDetailIndex"
+                            (indexEmitter)="indexEmitter($event)"></app-face-photo>
+          </div>
+
+          <br>
+          <!--类型修改-->
+          <div style="width: 100%;margin-bottom: 10px">
+            <h5>类型修改</h5>
+            <br>
+            <nz-cascader
+              [nzExpandTrigger]="'hover'"
+              [nzOptions]="_options"
+              [(ngModel)]="_value"
+              (ngModelChange)="type_console($event)">
+            </nz-cascader>
+          </div>
+
+          <div style="width: 100%;margin-bottom: 10px">
+            <h5>样本状态：</h5><br>
+            <div>
+              <nz-select [(ngModel)]="addState" style="width: 150px">
+                <nz-option [nzLabel]="'正常'" [nzValue]="'1'"></nz-option>
+                <nz-option [nzLabel]="'正在添加'" [nzValue]="'2'"></nz-option>
+                <nz-option [nzLabel]="'正在停止'" [nzValue]="'3'"></nz-option>
+                <nz-option [nzLabel]="'未启用'" [nzValue]="'0'"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <br>
+          <div style="width: 100%">
+            <!--标签-->
+            <div>
+              <h5>标签</h5>
+              <br>
+              <nz-input [(ngModel)]="lableValue" [nzType]="'textarea'" [nzRows]="'4'" [nzPlaceHolder]="''"></nz-input>
+            </div>
+            <br>
+            <!--阈值-->
+            <div style="width: 100%;zoom: 120%;margin-bottom: 10px">
+              <nz-input [(ngModel)]="siteName">
+                <ng-template #addOnBefore>阈 值</ng-template>
+              </nz-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #editModalFooter>
+      <button nz-button [nzType]="'primary'" style="height: 38px" (click)="editOk($event,photoInfo)">
+        提 交
+      </button>
+      <button nz-button [nzType]="'default'" style="height: 38px" (click)="editCancel($event)">
+        返 回
+      </button>
+    </ng-template>
+  </nz-modal>
+  <!--修改多张图片阈值弹框-->
+  <nz-modal [nzVisible]="isMulEditModalVisible" [nzFooter]="editModalFooter1" [nzContent]="editModalContent1"
+            [nzWidth]="550"
+            [nzClosable]="false"
+            (nzOnCancel)="editCancel1($event)" (nzOnOk)="editOk1($event)">
+    <ng-template #editModalContent1>
+      <div nz-row>
+        <div nz-col [nzSpan]="24">
+          <!--类型修改-->
+          <div style="width: 100%">
+            <h5>类型修改</h5>
+            <br>
+            <nz-cascader
+              [nzExpandTrigger]="'hover'"
+              [nzOptions]="_options"
+              [(ngModel)]="_value"
+              (ngModelChange)="type_console($event)">
+            </nz-cascader>
+          </div>
+          <br>
+          <div style="width: 100%;margin-bottom: 10px">
+            <h5>样本状态：</h5><br>
+            <div>
+              <nz-select [(ngModel)]="addState" style="width: 150px">
+                <nz-option [nzLabel]="'正常'" [nzValue]="'1'"></nz-option>
+                <nz-option [nzLabel]="'正在添加'" [nzValue]="'2'"></nz-option>
+                <nz-option [nzLabel]="'正在停止'" [nzValue]="'3'"></nz-option>
+                <nz-option [nzLabel]="'未启用'" [nzValue]="'0'"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <br>
+          <div style="width: 100%">
+            <!--标签-->
+            <div>
+              <h5>标签</h5>
+              <br>
+              <nz-input [(ngModel)]="lableValue" [nzType]="'textarea'" [nzRows]="'4'" [nzPlaceHolder]="''"></nz-input>
+            </div>
+            <br>
+            <!--阈值-->
+            <div style="width: 100%;zoom: 120%">
+              <nz-input [(ngModel)]="siteName">
+                <ng-template #addOnBefore>阈 值</ng-template>
+              </nz-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #editModalFooter1>
+      <button nz-button [nzType]="'primary'" style="height: 38px" (click)="editOk1($event)">
+        提 交
+      </button>
+      <button nz-button [nzType]="'default'" style="height: 38px" (click)="editCancel1($event)">
+        返 回
+      </button>
+    </ng-template>
+  </nz-modal>
+  <!--上传图片弹框-->
+  <nz-modal [nzVisible]="isUploadVisible" [nzFooter]="uploadModalFooter" [nzContent]="uploadModalContent"
+            [nzWidth]="550"
+            [nzClosable]="false"
+            (nzOnCancel)="handleUploadCancel($event)" (nzOnOk)="handleUploadOk($event)">
+    <ng-template #uploadModalContent>
+      <div nz-row>
+        <div nz-col [nzSpan]="24">
+          <div nz-row>
+            <div nz-col [nzSpan]="10">
+              <nz-upload
+                [nzMultiple]="true"
+                [(nzFileList)]="fileList"
+                [nzBeforeUpload]="beforeUpload"
+                nzShowUploadList="false">
+                <button nz-button>
+                  <i class="anticon anticon-upload"></i><span>选择上传</span>
+                </button>
+              </nz-upload>
+            </div>
+            <div nz-col [nzSpan]="14">
+              <button nz-button [nzType]="'primary'" (click)="clearAll()" style="height: 28px">
+                <span>清空图片</span>
+              </button>
+            </div>
+          </div>
+          <br>
+          <div nz-row>
+            <div *ngIf="haveImage">
+              <div *ngFor="let image of imageUrl">
+                <img [src]="image" style="width: 90px;height: 90px;float: left;margin-right: 6px;margin-bottom: 6px">
+              </div>
+            </div>
+          </div>
+          <!--标记类型-->
+          <div nz-row>
+            <div style="width:100%">
+              <h5>人脸名称</h5>
+              <br>
+              <div>
+                <nz-input [(ngModel)]="faceName" [nzPlaceHolder]="'人脸名称'"></nz-input>
+              </div>
+            </div>
+            <br>
+            <div style="width:100%">
+              <h5>标记类型</h5>
+              <br>
+              <nz-cascader
+                [nzExpandTrigger]="'hover'"
+                [nzOptions]="_options"
+                [(ngModel)]="_value"
+                (ngModelChange)="type_console($event)">
+              </nz-cascader>
+            </div>
+          </div>
+          <br>
+          <div style="width: 100%;margin-bottom: 10px">
+            <h5>样本状态：</h5><br>
+            <div>
+              <nz-select [(ngModel)]="uploadState" style="width: 150px">
+                <nz-option [nzLabel]="'正常'" [nzValue]="'1'"></nz-option>
+                <nz-option [nzLabel]="'正在添加'" [nzValue]="'2'"></nz-option>
+                <nz-option [nzLabel]="'正在停止'" [nzValue]="'3'"></nz-option>
+                <nz-option [nzLabel]="'未启用'" [nzValue]="'0'"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <br>
+          <div style="width: 100%">
+            <!--标签-->
+            <div>
+              <h5>标签</h5>
+              <br>
+              <nz-input [(ngModel)]="uploadLabel" [nzType]="'textarea'" [nzRows]="'4'" [nzPlaceHolder]="''"></nz-input>
+            </div>
+            <br>
+            <!--阈值-->
+            <div style="width: 100%;zoom: 120%">
+              <nz-input [(ngModel)]="uploadName">
+                <ng-template #addOnBefore>阈 值</ng-template>
+              </nz-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #uploadModalFooter>
+      <button nz-button [nzType]="'primary'" style="height: 38px" (click)="handleUploadOk($event)"
+              [disabled]="fileList.length == 0">
+        {{ uploading ? '正在提交中' : '提交' }}
+      </button>
+      <button nz-button [nzType]="'default'" style="height: 38px" (click)="handleUploadCancel($event)">
+        返 回
+      </button>
+    </ng-template>
+  </nz-modal>
+</nz-layout>

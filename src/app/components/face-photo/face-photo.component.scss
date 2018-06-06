@@ -1,0 +1,25 @@
+.photo_container {
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  .item {
+    padding: 3px;
+    text-align: center;
+    min-width: 110px;
+    height: 130px;
+    margin: 5px 5px;
+    border: 1px solid gainsboro;
+    .text {
+      text-align: left;
+      span {
+      }
+    }
+
+  }
+}
+
+.text-pagination {
+  margin: 5px 0;
+  text-align: center;
+}

@@ -1,0 +1,41 @@
+<nz-layout>
+  <nz-breadcrumb style="margin:12px 0;">
+    <nz-breadcrumb-item>引擎检测</nz-breadcrumb-item>
+    <nz-breadcrumb-item>特征管理</nz-breadcrumb-item>
+    <nz-breadcrumb-item>关键词</nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <nz-content style="background:#fff; padding: 24px; min-height: 280px;padding-left: 0px">
+    <div nz-row>
+      <div nz-col [nzSpan]="4">
+          <ul nz-menu [nzMode]="'inline'" style="width: 95%;">
+            <li nz-submenu *ngFor="let navigationOption of navigationOptions" [nzOpen]="navigationOption.index===0? true:false">
+              <span title> {{navigationOption.title}}
+              <nz-tooltip [nzTitle]="'添加'">
+                <i nz-tooltip class="anticon anticon-plus" (click)="addIcon($event,navigationOption.title)"
+                       style="display:block;position: absolute;top: 50%;right: 15%;transform: translate(-50%, -50%);" >
+                </i>
+                  </nz-tooltip>
+              </span>
+              <ul *ngFor="let subtitle of navigationOption.subtitles">
+                <li iconDisplay  nz-menu-item (click)="clickItem(subtitle,navigationOption.title)">{{subtitle}}
+                  <nz-tooltip [nzTitle]="'编辑'">
+                    <i nz-tooltip class="anticon anticon-edit" (click)="editIcon($event,subtitle,navigationOption.title)"
+                       style="display:block;position: absolute;top: 50%;right: 18%;transform: translate(-50%, -50%);" ></i>
+                  </nz-tooltip>
+                  <nz-tooltip [nzTitle]="'删除'">
+                    <i nz-tooltip class="anticon anticon-delete" (click)="deleteIcon($event,subtitle,navigationOption.title)"
+                       style="display:block;position: absolute;top: 50%;right: 0%;transform: translate(-50%, -50%);" ></i>
+                  </nz-tooltip>
+                </li>
+              </ul>
+            </li>
+          </ul>
+      </div>
+      <div nz-col [nzSpan]="20">
+        <dynamic-keyword [tableData]="tableData" [secondTitle]="secondTitle"
+                         (secondTitltEmit)="secondTitltEmit($event)" (tableDataEmit)="tableDataEmit($event)"></dynamic-keyword>
+      </div>
+    </div>
+
+  </nz-content>
+</nz-layout>

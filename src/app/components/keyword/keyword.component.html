@@ -1,0 +1,78 @@
+<div class="dynamicKeywordComponent_container">
+
+  <div nz-row>
+    <div nz-col [nzSpan]="5" style="margin-bottom: 5px">
+      <nz-input [(ngModel)]="secondTitle" [nzPlaceHolder]="'专题词名称'"></nz-input>
+    </div>
+  </div>
+
+
+  <nz-table #nzTable [nzDataSource]="tableData" [nzPageSize]="10" [nzSize]="'middle'" [nzShowTitle]="false" nzShowFooter nzShowSizeChanger
+    nzBordered nzShowTotal>
+
+    <thead nz-thead>
+      <tr>
+        <th nz-th [nzWidth]="'32px'">
+          <span>#</span>
+        </th>
+        <th nz-th>
+          <span>keyword</span>
+        </th>
+        <th nz-th>
+          <span>white</span>
+        </th>
+        <th nz-th [nzWidth]="'80px'">
+          <span>action</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody nz-tbody>
+      <tr *ngFor="let rule of tableData; index as i; trackBy: trackByIndex;">
+        <td>{{ i + 1 }}</td>
+        <td>
+          <div class="keyword_container">
+            <div class="item" *ngFor="let keyword of rule.keyword; index as iKeyword; trackBy: trackByIndex;">
+              <nz-input [(ngModel)]="rule.keyword[iKeyword]" nzType="textarea" [nzAutosize]="{minRows: 1}" [nzPlaceHolder]="'keyword'">
+                <ng-template #suffix>
+                  <i class="anticon anticon-close btn_close" (click)="keyDel(i, iKeyword)"></i>
+                </ng-template>
+              </nz-input>
+            </div>
+            <div class="add-btn_container">
+              <button nz-button [nzType]="'primary'" nzSize="'default'" [nzShape]="'circle'" (click)="ruleAdd(i)">
+                <i class="anticon anticon-plus"></i>
+              </button>
+            </div>
+          </div>
+        </td>
+        <td>
+          <nz-input [(ngModel)]="rule.white" [nzPlaceHolder]="'white'"></nz-input>
+        </td>
+        <td>
+          <div class="del-btn_container">
+            <button nz-button [nzType]="'danger'" nzSize="'default'" [nzShape]="'circle'" (click)="ruleDel(rule.id, i)">
+              <i class="anticon anticon-delete"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+    <span nz-table-footer>
+      <div class="dynamicKeyword-footer_container">
+        <div class="dynamicKeyword-footer-ruleAdd_container">
+          <button nz-button [nzType]="'primary'" nzSize="'small'" [nzShape]="'circle'" (click)="tempRuleAdd()">
+            <i class="anticon anticon-plus"></i>
+          </button>
+        </div>
+        <div class="dynamicKeyword-footer-ruleSave_container">
+          <nz-popconfirm [nzTitle]="'确认保存'" (nzOnConfirm)="ruleSave()" (nzOnCancel)="ruleCancel()">
+            <button nz-button nz-popconfirm [nzType]="'primary'" nzSize="default" [nzShape]="'circle'" >
+            <i class="anticon anticon-save"></i>
+            </button>
+          </nz-popconfirm>
+
+        </div>
+      </div>
+    </span>
+  </nz-table>
+</div>

@@ -1,0 +1,222 @@
+<nz-layout>
+  <nz-breadcrumb style="margin:12px 0;">
+    <nz-breadcrumb-item>引擎检测</nz-breadcrumb-item>
+    <nz-breadcrumb-item>检测管理</nz-breadcrumb-item>
+    <nz-breadcrumb-item>安全规则</nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <nz-content style="background:#fff; padding: 24px; min-height: 280px;">
+    <!--增加规则的模态框-->
+    <div>
+      <button nz-button [nzType]="'primary'" (click)="showModal()">
+        <span>添加安全规则</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="stopAll()">
+        <span>批量停止</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="useAll()">
+        <span>批量生效</span>
+      </button>
+      <nz-modal [nzVisible]="isVisible" [nzTitle]="'添加安全规则'" [nzContent]="modalContent" [nzFooter]="modalFooter"
+                (nzOnCancel)="handleCancel($event)" (nzOnOk)="handleOk($event)">
+        <ng-template #modalContent>
+          <div class="modal-line" nz-row>
+            <div nz-col [nzSpan]="6">
+              <span>授权策略：</span>
+            </div>
+            <div nz-col [nzSpan]="12" [nzOffset]="4">
+              <nz-select [(ngModel)]="addStragety" style="width: 100px">
+                <nz-option [nzLabel]="'允许'" [nzValue]="'允许'"></nz-option>
+                <nz-option [nzLabel]="'不允许'" [nzValue]="'不允许'"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div class="modal-line" nz-row>
+            <div nz-col [nzSpan]="6">
+              <span>端口范围：</span>
+            </div>
+            <div nz-col [nzSpan]="12" [nzOffset]="4">
+              <nz-input [(ngModel)]="addPort" [nzPlaceHolder]="'例如:22/22或3389/3389'"
+                        (ngModelChange)="_console($event)"></nz-input>
+            </div>
+          </div>
+          <div class="modal-line" nz-row>
+            <div nz-col [nzSpan]="6">
+              <span>授权类型：</span>
+            </div>
+            <div nz-col [nzSpan]="12" [nzOffset]="4">
+              <nz-select [(ngModel)]="addType" style="width: 100px">
+                <nz-option [nzLabel]="'地址段访问'" [nzValue]="'地址段访问'"></nz-option>
+                <nz-option [nzLabel]="'非地址段访问'" [nzValue]="'非地址段访问'"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div class="modal-line" nz-row>
+            <div nz-col [nzSpan]="6">
+              <span>授权对象：</span>
+            </div>
+            <div nz-col [nzSpan]="12" [nzOffset]="4">
+              <nz-input [(ngModel)]="addTarget" [nzType]="'textarea'" [nzRows]="'2'"
+                        [nzPlaceHolder]="'例如:10.x.y.z/32,多个用,隔开,最多支持50组授权对象。'"></nz-input>
+            </div>
+          </div>
+          <div class="modal-line" nz-row>
+            <div nz-col [nzSpan]="6">
+              <span>优先级：</span>
+            </div>
+            <div nz-col [nzSpan]="12" [nzOffset]="4">
+              <nz-select [(ngModel)]="addPriority" style="width: 100px">
+                <nz-option [nzLabel]="'1'" [nzValue]="'1'"></nz-option>
+                <nz-option [nzLabel]="'2'" [nzValue]="'2'"></nz-option>
+                <nz-option [nzLabel]="'3'" [nzValue]="'3'"></nz-option>
+                <nz-option [nzLabel]="'4'" [nzValue]="'4'"></nz-option>
+                <nz-option [nzLabel]="'5'" [nzValue]="'5'"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div class="modal-line" nz-row>
+            <div nz-col [nzSpan]="6">
+              <span>描述：</span>
+            </div>
+            <div nz-col [nzSpan]="12" [nzOffset]="4">
+              <nz-input [(ngModel)]="addDesc" [nzType]="'textarea'" [nzRows]="'2'"
+                        [nzPlaceHolder]="'长度为2-256个字符。'"></nz-input>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #modalFooter>
+          <button nz-button [nzType]="'primary'" style="height: 38px" (click)="handleOk($event)">
+            提 交
+          </button>
+          <button nz-button [nzType]="'default'" style="height: 38px" (click)="handleCancel($event)">
+            返 回
+          </button>
+        </ng-template>
+      </nz-modal>
+    </div>
+
+    <!--table页面-->
+    <nz-table #nzTable [nzDataSource]="data" (nzDataChange)="_displayDataChange($event)" [nzPageSize]="10">
+      <thead nz-thead>
+      <tr>
+        <th nz-th nzCheckbox>
+          <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
+          </label>
+        </th>
+        <th nz-th><span>授权策略</span></th>
+        <th nz-th><span>端口范围</span></th>
+        <th nz-th><span>授权类型</span></th>
+        <th nz-th><span>授权对象</span></th>
+        <th nz-th><span>优先级</span></th>
+        <th nz-th><span>描述</span></th>
+        <th nz-th><span>创建时间</span></th>
+        <th nz-th><span>操作</span></th>
+      </tr>
+      </thead>
+      <tbody nz-tbody>
+      <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+        <td nz-td nzCheckbox>
+          <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)">
+          </label>
+        </td>
+        <td nz-td>
+          <a>{{data.strategy}}</a>
+        </td>
+        <td nz-td>{{data.portrange}}</td>
+        <td nz-td>{{data.type}}</td>
+        <td nz-td>{{data.target}}</td>
+        <td nz-td>{{data.priority}}</td>
+        <td nz-td>{{data.description }}</td>
+        <td nz-td>{{data.createtime }}</td>
+        <td nz-td>
+                <span>
+                  <button nz-button [nzType]="'default'" [nzSize]="'small'" (click)="showEditModel(data)">修改</button>
+                  <span nz-table-divider></span>
+                  <button nz-button [nzType]="'default'" [nzSize]="'small'" (click)="deleteTable(data.id)">删除</button>
+                  <span nz-table-divider></span>
+                  <button nz-button [nzType]="'default'" [nzSize]="'small'" (click)="stopTable(data.id)"
+                          [disabled]="data.state===0? true:false" >停止</button>
+                  <span nz-table-divider></span>
+                  <button nz-button [nzType]="'default'" [nzSize]="'small'"
+                          (click)="useTable(data.id)" [disabled]="data.state===1? true:false">生效</button>
+                </span>
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+    <nz-modal [nzVisible]="isEditVisible" [nzTitle]="'修改安全规则'" [nzContent]="editModalContent"
+              [nzFooter]="editModalFooter" (nzOnCancel)="editCancel($event)" (nzOnOk)="editOk($event)">
+      <ng-template #editModalContent>
+        <div class="modal-line" nz-row>
+          <div nz-col [nzSpan]="6">
+            <span>授权策略：</span>
+          </div>
+          <div nz-col [nzSpan]="12" [nzOffset]="4">
+            <nz-select [ngModel]="editStragety" style="width: 100px">
+              <nz-option [nzLabel]="'允许'" [nzValue]="'允许'"></nz-option>
+              <nz-option [nzLabel]="'不允许'" [nzValue]="'不允许'"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div class="modal-line" nz-row>
+          <div nz-col [nzSpan]="6">
+            <span>端口范围：</span>
+          </div>
+          <div nz-col [nzSpan]="12" [nzOffset]="4">
+            <nz-input [(ngModel)]="editPort" [nzPlaceHolder]="'例如:22/22或3389/3389'"></nz-input>
+          </div>
+        </div>
+        <div class="modal-line" nz-row>
+          <div nz-col [nzSpan]="6">
+            <span>授权类型：</span>
+          </div>
+          <div nz-col [nzSpan]="12" [nzOffset]="4">
+            <nz-select [(ngModel)]="editType" style="width: 100px">
+              <nz-option [nzLabel]="'地址段访问'" [nzValue]="'地址段访问'"></nz-option>
+              <nz-option [nzLabel]="'非地址段访问'" [nzValue]="'非地址段访问'"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div class="modal-line" nz-row>
+          <div nz-col [nzSpan]="6">
+            <span>授权对象：</span>
+          </div>
+          <div nz-col [nzSpan]="12" [nzOffset]="4">
+            <nz-input [(ngModel)]="editTarget" [nzType]="'textarea'" [nzRows]="'2'"
+                      [nzPlaceHolder]="'例如:10.x.y.z/32,多个用,隔开,最多支持50组授权对象。'"></nz-input>
+          </div>
+        </div>
+        <div class="modal-line" nz-row>
+          <div nz-col [nzSpan]="6">
+            <span>优先级：</span>
+          </div>
+          <div nz-col [nzSpan]="12" [nzOffset]="4">
+            <nz-select [(ngModel)]="editPriority" style="width: 100px">
+              <nz-option [nzLabel]="'1'" [nzValue]="'1'"></nz-option>
+              <nz-option [nzLabel]="'2'" [nzValue]="'2'"></nz-option>
+              <nz-option [nzLabel]="'3'" [nzValue]="'3'"></nz-option>
+              <nz-option [nzLabel]="'4'" [nzValue]="'4'"></nz-option>
+              <nz-option [nzLabel]="'5'" [nzValue]="'5'"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div class="modal-line" nz-row>
+          <div nz-col [nzSpan]="6">
+            <span>描述：</span>
+          </div>
+          <div nz-col [nzSpan]="12" [nzOffset]="4">
+            <nz-input [(ngModel)]="editDesc" [nzType]="'textarea'" [nzRows]="'2'"
+                      [nzPlaceHolder]="'长度为2-256个字符。'"></nz-input>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #editModalFooter>
+        <button nz-button [nzType]="'primary'" style="height: 38px" (click)="editOk($event)">
+          提 交
+        </button>
+        <button nz-button [nzType]="'default'" style="height: 38px" (click)="editCancel($event)">
+          返 回
+        </button>
+      </ng-template>
+    </nz-modal>
+  </nz-content>
+</nz-layout>

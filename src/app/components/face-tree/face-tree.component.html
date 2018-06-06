@@ -1,0 +1,85 @@
+<label nz-checkbox [(ngModel)]="_allChecked" (ngModelChange)="updateAllChecked()"
+       [nzIndeterminate]="indeterminate" style="zoom: 120%">
+  <span>全选</span>
+</label>
+<br>
+<div nz-row>
+  <div nz-col [nzSpan]="16">
+    <nz-input [(ngModel)]="firstEvent"  [nzPlaceHolder]="'添加一级主题'"></nz-input>
+  </div>
+  <div nz-col [nzSpan]="8" >
+    <button nz-button [nzType]="'primary'" (click)="saveFirstEvent()">
+      <span>保存</span>
+    </button>
+  </div>
+</div>
+
+<ul nz-menu [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
+  <li nz-submenu *ngFor="let node of nodes" [nzOpen]="node.collspan" >
+    <span title *ngIf="!node.edit">
+      <label nz-checkbox  [(ngModel)]="node['checked']" (ngModelChange)="updateParentChecked(node)"
+             (click)="clickParent($event)" [nzIndeterminate]="node['indeterminateParent']">{{node.name}}</label>
+      <nz-tooltip [nzTitle]="'添加'">
+        <i nz-tooltip class="anticon anticon-plus" (click)="addIcon($event,node.id)"
+           style="display:block;position: absolute;top: 50%;right: 30%;transform: translate(-50%, -50%);" >
+        </i>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'编辑'">
+          <i nz-tooltip class="anticon anticon-edit" (click)="editFirstIcon($event,node.id)"
+             style="display:block;position: absolute;top: 50%;right: 20%;transform: translate(-50%, -50%);"></i>
+        </nz-tooltip>
+      <nz-tooltip [nzTitle]="'删除'">
+          <i nz-tooltip class="anticon anticon-delete" (click)="deleteIcon($event,'-1',node.id)"
+             style="display:block;position: absolute;top: 50%;right: 10%;transform: translate(-50%, -50%);" ></i>
+        </nz-tooltip>
+    </span>
+    <span title *ngIf="node.edit">
+      <div nz-row>
+          <div nz-col [nzSpan]="16" (click)="stopMouse($event)">
+            <nz-input [(ngModel)]="pName" [nzSize]="'small'" ></nz-input>
+          </div>
+          <div nz-col [nzSpan]="8">
+            <nz-tooltip [nzTitle]="'保存'">
+              <i nz-tooltip class="anticon anticon-save" (click)="saveIcon($event,'-2',node.id)"></i>
+            </nz-tooltip>
+            <nz-tooltip [nzTitle]="'取消'">
+              <i nz-tooltip class="anticon anticon-close" (click)="cancelIcon($event,'-2',node.id)"
+                 style="position: absolute;top: 40%;right: 15%;"></i>
+            </nz-tooltip>
+          </div>
+        </div>
+    </span>
+
+    <ul *ngFor="let children of node['children']">
+      <li nz-menu-item *ngIf="!children.edit && children.name !='' ">
+        <label nz-checkbox [(ngModel)]="children['checked']" (ngModelChange)="updateChildChecked(children,node)">{{children.name}}</label>
+        <nz-tooltip [nzTitle]="'编辑'">
+          <i nz-tooltip class="anticon anticon-edit" (click)="editIcon($event,children.id,node.id)"
+             style="display:block;position: absolute;top: 50%;right: 18%;transform: translate(-50%, -50%);"></i>
+        </nz-tooltip>
+        <nz-tooltip [nzTitle]="'删除'">
+          <i nz-tooltip class="anticon anticon-delete" (click)="deleteIcon($event,children.id,node.id)"
+             style="display:block;position: absolute;top: 50%;right: 0%;transform: translate(-50%, -50%);" ></i>
+        </nz-tooltip>
+      </li>
+      <li nz-menu-item *ngIf="children.edit && children.name==='' ">
+
+        <div nz-row>
+          <div nz-col [nzSpan]="16">
+            <nz-input [(ngModel)]="eventName" [nzSize]="'small'"></nz-input>
+          </div>
+          <div nz-col [nzSpan]="8">
+            <nz-tooltip [nzTitle]="'保存'">
+              <i nz-tooltip class="anticon anticon-save" (click)="saveIcon($event,children.id,node.id)"></i>
+            </nz-tooltip>
+            <nz-tooltip [nzTitle]="'取消'">
+              <i nz-tooltip class="anticon anticon-close" (click)="cancelIcon($event,children.id,node.id)"></i>
+            </nz-tooltip>
+          </div>
+        </div>
+
+
+      </li>
+    </ul>
+  </li>
+</ul>

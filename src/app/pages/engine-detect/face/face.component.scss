@@ -1,0 +1,49 @@
+.input-group{
+  margin-bottom: 1%;
+  margin-top: 1%;
+}
+.right_side_action{
+  width: 40%;
+  margin-bottom: 1%;
+  margin-top: 1%;
+}
+.form-control{
+  width: 60%;
+}
+.ant-btn-primary{
+  height: auto;
+}
+.photo_container {
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  .item {
+    padding: 5px;
+    text-align: center;
+    width: 160px;
+    min-width: 170px;
+    height: 280px;
+    margin: 15px;
+    border: 1px solid gainsboro;
+    p{
+      text-align: left;
+    }
+  }
+}
+.text-pagination {
+  margin: 5px 0;
+  float: right;
+}
+
+.photoUrl{
+  margin-bottom:0px;
+  font-size: 14px;
+  width: 200px;
+  white-space:normal;
+  word-break:break-all;
+  word-wrap:break-word;
+}
+:host::ng-deep .ant-upload-list-item{
+  display: none;
+}
